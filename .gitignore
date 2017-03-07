@@ -1,0 +1,41 @@
+# =============== #
+# Unity generated #
+# =============== #
+Everlie/[Tt]emp/
+Everlie/[Oo]bj/
+Everlie/[Bb]uilds/
+Everlie/[Ll]ibrary/
+Everlie/[Ll]ibrary_ANDROID/
+Everlie/[Ll]ibrary_PC/
+Everlie/[Ll]ibrary_IOS/
+Everlie/sysinfo.txt
+Everlie/UnityVS/
+Everlie/UnityVS.meta
+Everlie/LightingData*
+Everlie/ReflectionProbe*
+Everlie/Assets/Scenes/Personal Scenes*
+
+# ===================================== #
+# Visual Studio / MonoDevelop generated #
+# ===================================== #
+Everlie/[Ee]xported[Oo]bj/
+Everlie/*.userprefs
+Everlie/*.csproj
+Everlie/*.pidb
+Everlie/*.suo
+Everlie/*.sln*
+Everlie/*.user
+Everlie/*.unityproj
+Everlie/*.booproj
+
+# ============
+# OS generated
+# ============
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Thumbs.db.meta
