@@ -96,7 +96,9 @@ public class StorySegment : ScriptableObject {
 	}
 
 	public void Minigame(){
-		myMiniGame.Update ();
+		if (Mathf.Abs(myMiniGame.Update ()) > 100) {
+			currentState = StorySegmentState.outro;
+		}
 	}
 
 	public void Outro(){

@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEditor;
 
-public class AcceptReject : MonoBehaviour {
+[System.Serializable]
+[CreateAssetMenu(menuName = "Everlie/Minigame")]
+public class AcceptReject : MiniGame {
 
 	public enum State
 	{
@@ -24,8 +26,10 @@ public class AcceptReject : MonoBehaviour {
 	private Vector2 average;
 	private Vector2 directionVector;
 
-	IEnumerator waitForNextSample(){
-		yield return new WaitForSeconds (0.5f);
+	private float timer;
+	public float delay = 0.5f;
+
+	void WaitForNextSample(){
 		average = Vector2.zero;
 		for (int i = 0; i < recordedPosistions.Count; i++) {
 			average += recordedPosistions [i];
@@ -125,19 +129,21 @@ public class AcceptReject : MonoBehaviour {
 			}
 		}
 		recordedPosistions.Clear ();
-		StartCoroutine (waitForNextSample ());
 	}
 
-	void Awake(){
-		StartCoroutine (waitForNextSample ());
-	}
-
-	// Update is called once per frame
-	void Update () {
-
+	public override float Update () {
 		if (Input.touchCount > 0) {
 			Touch touch = Input.touches [0];
 			recordedPosistions.Add (touch.deltaPosition);
 		}
+
+		if (timer >= delay) {
+			timer = 0f;
+			WaitForNextSample ();
+		} else {
+			timer += Time.deltaTime;
+		}
+
+		return yesCount - noCount;
 	}
 }

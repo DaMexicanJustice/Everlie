@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CreateAssetMenu(menuName = "Everlie/Minigame", fileName="Minigame", order=3)]
+[CreateAssetMenu(menuName= "Everlie/", fileName="New MiniGame")]
 public abstract class MiniGame : ScriptableObject {
 	public List<AudioClip> audioTracks = new List<AudioClip>();
 	public AudioClip masterSoundClip;
@@ -22,5 +22,5 @@ public abstract class MiniGame : ScriptableObject {
 		Instantiate (UIGraphics, UIGraphics.transform.position, UIGraphics.transform.rotation);
 	}
 
-	public abstract void Update ();
+	public abstract float Update ();
 }
