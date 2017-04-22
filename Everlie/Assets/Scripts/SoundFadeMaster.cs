@@ -4,81 +4,52 @@ using UnityEngine;
 
 public class SoundFadeMaster : Singleton<SoundFadeMaster> {
 
-	struct AudioFadePair{
-		AudioSource fromAudio;
-		private float fromStartVolume;
-
-		AudioSource toAudio;
-		private float toStartVolume;
-
-		public float fadeTime;
-		public float progress;
-
-		public AudioFadePair(AudioSource fromAudio, AudioSource toAudio, float fadeTime){
-			this.fromAudio = fromAudio;
-			fromStartVolume = fromAudio.volume;
-
-			this.toAudio = toAudio;
-			toStartVolume = toAudio.volume;
-			toAudio.Play ();
-
-			this.fadeTime = fadeTime;
-			progress = 0f;
-		}
-
-		public void EvaluateFade(){
-			float fraction = Mathf.Max (progress / fadeTime, 1);
-			fromAudio.volume = fromStartVolume * (1f - fraction);
-			toAudio.volume = toStartVolume * fraction;
-		}
-
-		public void Clear(){
-			Destroy (fromAudio);
-		}
-
-		public bool Contains(AudioSource ac){
-			if (fromAudio != ac && toAudio != ac) {
-				return false;
-			} else {
-				return true;
-			}
-		}
-
-		public void AddProgress(float deltaTime){
-			progress += deltaTime;
-		}
-	}
-
 	protected SoundFadeMaster()
 	{
 		// Since the Constructor is protected an instance can't be made of the Toolbox
-	} 
-
-	static bool applicationIsQuitting = false;
-
-	private static List<AudioFadePair> fadePairs = new List<AudioFadePair> ();
-
-	public static void FadeSound(AudioSource fromAudio, AudioSource toAudio, float fadeTime){
-		foreach (AudioFadePair afp in fadePairs) {
-			if (!afp.Contains (fromAudio)) {
-				AudioFadePair newAudioFadePair = new AudioFadePair (fromAudio, toAudio, fadeTime);
-				fadePairs.Add (newAudioFadePair);
-			}
-		}
 	}
 
-	void Update(){
-		if (fadePairs != null) {
-			if (fadePairs.Count > 0) {
-				foreach (AudioFadePair afp in fadePairs) {
-					if (afp.progress <= afp.fadeTime) {
-						afp.AddProgress(Time.deltaTime);
-						afp.EvaluateFade ();
-					} else {
-						afp.Clear ();
-						fadePairs.Remove (afp);
-					}
+    static bool applicationIsQuitting = false;
+
+    private static List<AudioFadeSource> fadeSources = new List<AudioFadeSource>();
+
+    public static void FadeSound(AudioSource audio, float fadeTime, bool isFadingOut)
+    {
+        if (fadeSources.Count >= 1) {
+            for (int i = 0; i < fadeSources.Count; i++) {
+                if (!fadeSources[i].Contains (audio))
+                {
+                    AudioFadeSource newAudioSource = new AudioFadeSource(audio, fadeTime, isFadingOut);
+                    fadeSources.Add (newAudioSource);
+                }
+            }
+        } else {
+            AudioFadeSource newAudioSource = new AudioFadeSource (audio, fadeTime, isFadingOut);
+            fadeSources.Add (newAudioSource);
+        }
+    }
+
+	public void Update(){
+		if (fadeSources != null) {
+			if (fadeSources.Count > 0) {
+			    List<AudioFadeSource> sourcesToRemove = new List<AudioFadeSource>();
+				foreach (AudioFadeSource afs in fadeSources) {
+					afs.AddProgress(Time.deltaTime);
+				    if (afs.EvaluateFade())
+				    {
+				        sourcesToRemove.Add(afs);
+				    }
 				}
+
+			    foreach (AudioFadeSource str in sourcesToRemove)
+			    {
+			        if (str.audio.volume <= 0.1f)
+			        {
+			            Destroy(str.audio);
+			        }
+
+			        fadeSources.Remove(str);
+			    }
 			}
 		}
 	}

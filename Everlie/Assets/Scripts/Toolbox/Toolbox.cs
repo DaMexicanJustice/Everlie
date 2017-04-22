@@ -6,6 +6,8 @@ public class Toolbox : Singleton<Toolbox>
 {
     readonly static bool DEBUG_ENABLED = false;
 
+    public RectTransform rt;
+
     protected Toolbox()
     {
         // Since the Constructor is protected an instance can't be made of the Toolbox
@@ -19,9 +21,10 @@ public class Toolbox : Singleton<Toolbox>
     {
 		DontDestroyOnLoad (gameObject);
 
-		//var pointsMaster = this.GetOrAddComponent<PointsMaster> ();
-		//RegisterComponent<PointsMaster> (pointsMaster);
-	
+		var soundFadeMaster = this.GetOrAddComponent<SoundFadeMaster> ();
+		RegisterComponent<SoundFadeMaster> (soundFadeMaster);
+
+        rt = GameObject.FindGameObjectWithTag("GameController").transform.GetChild(0).GetComponent<RectTransform>();
     }
 
     void OnApplicationQuit()

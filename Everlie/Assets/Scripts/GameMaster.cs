@@ -10,12 +10,32 @@ public class GameMaster : MonoBehaviour {
 	public CollectiveStory story;
 	private int index = 0;
 
-	void Awake () {
-		Toolbox.RegisterComponent<GameMaster> (this);
+    public GameObject background;
+    private AudioSource myAudioSource;
+    private bool isPlaying = false;
+
+    public voidEvent InitiateStory;
+
+    void Awake()
+    {
+        Toolbox.RegisterComponent<GameMaster> (this);
+        myAudioSource = gameObject.GetComponent<AudioSource>();
+        myAudioSource.Play();
+        InitiateStory += BeginStory;
+    }
+
+    public void BeginStory () {
 		story.Initiate();
-	}
+        background.SetActive(true);
+        isPlaying = true;
+
+        SoundFadeMaster.FadeSound(myAudioSource, 3f, true);
+    }
 
 	void Update(){
-		story.Update ();
+	    if (isPlaying)
+	    {
+	        story.Update();
+	    }
 	}
 }
