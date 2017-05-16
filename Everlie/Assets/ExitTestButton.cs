@@ -21,7 +21,11 @@ public class ExitTestButton : MonoBehaviour
             Application.Quit();
         }
 
-        GUI.Box(new Rect(10, 50, 100, 30), "Yes: " + yesCount.ToString());
-        GUI.Box(new Rect(10, 85, 100, 30), "No: " + noCount.ToString());
+        GUI.Box(new Rect(10, 50, 100, 30), yesCount.ToString());
+        GUI.Box(new Rect(10, 85, 100, 30), noCount.ToString());
+
+		if (GUI.Button (new Rect (10, 120, 100, 30), "Skip segment")) {
+			Toolbox.FindRequiredComponent<GameMaster> ().SkipCurrentSegment ();
+		}
     }
 }

@@ -12,7 +12,6 @@ public class BranchSegment : StorySegment {
 
     [HideInInspector] public float segmentTimer;
 
-    private bool isFadingAudio = false;
 
     [HideInInspector] public bool shouldPlayWin = true;
 
@@ -20,10 +19,10 @@ public class BranchSegment : StorySegment {
 
     public override void Play(){
         segmentTimer = 0f;
-        isFadingAudio = false;
 
         introAudioSource = Camera.main.gameObject.AddComponent<AudioSource> ();
         introAudioSource.clip = shouldPlayWin ? winAudioSegment.masterSoundClip : loseAudioSegment.masterSoundClip;
+		introAudioSource.time = startDelay;
         introAudioSource.Play ();
         introAudioSource.loop = false;
 
@@ -47,7 +46,8 @@ public class BranchSegment : StorySegment {
         segmentTimer += Time.deltaTime;
 
         if (segmentTimer >= (shouldPlayWin? winAudioSegment.segmentLength:loseAudioSegment.segmentLength)) {
-            OnSegmentCompleted ();
+			SoundFadeMaster.FadeSound(introAudioSource, 3, true);
+			OnSegmentCompleted ();
             Clear ();
         }
     }
@@ -55,4 +55,10 @@ public class BranchSegment : StorySegment {
     public override void Clear(){
         Destroy (introAudioSource);
     }
+
+	public override void Skip(){
+		SoundFadeMaster.FadeSound (introAudioSource, 3, true);
+		OnSegmentCompleted ();
+		Clear ();
+	}
 }

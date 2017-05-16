@@ -13,7 +13,6 @@ public class AcceptReject : MiniGame {
 	}
 
 	private State state;
-	private float magnitudeLimit;
 
 	private int yesCount;
 	private int noCount;
@@ -44,7 +43,6 @@ public class AcceptReject : MiniGame {
 
 		directionVector = average;
 
-		if (directionVector.magnitude > magnitudeLimit) {
 			switch (state) {
 			case State.Down:
 				if (Mathf.Abs (directionVector.x) > Mathf.Abs (directionVector.y)) {
@@ -107,7 +105,6 @@ public class AcceptReject : MiniGame {
 				}
 				break;	
 			}
-		}
 		recordedPositions.Clear ();
 	}
 
@@ -140,7 +137,7 @@ public class AcceptReject : MiniGame {
 
     public void VerifyCompletion()
     {
-        if (yesCount > 5 || noCount > 5)
+        if (yesCount > 3 || noCount > 3)
         {
             End();
             CompletionCallback(yesCount - noCount);

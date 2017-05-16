@@ -9,7 +9,7 @@ public class MiniGame : StorySegment {
 	public AudioClip idleSpeak1;
 	public AudioClip idleSpeak2;
 
-    public AudioClip interActionSound;
+    public AudioClip interactionSound;
 
 	public GameObject UIGraphics;
 
@@ -39,7 +39,6 @@ public class MiniGame : StorySegment {
 		interactionLoopAudioSource.loop = true;
 	    SoundFadeMaster.FadeSound(interactionLoopAudioSource, 0.5f, false);
 
-
 	    idleSpeakAudioSource = Camera.main.gameObject.AddComponent<AudioSource> ();
 	    interactionLoopAudioSource.volume = 1f;
 	    idleSpeakAudioSource.clip = idleSpeak1;
@@ -50,6 +49,16 @@ public class MiniGame : StorySegment {
 
 	public override void Play(){
 	    Initialize();
+
+		GameObject audioObject = new GameObject ("Interaction Sound", typeof(AudioSource));
+		Destroy (audioObject, 5f);
+
+		AudioSource audioSource = audioObject.GetComponent<AudioSource> ();
+		audioSource.volume = 1f;
+		audioSource.clip = interactionSound;
+		audioSource.time = startDelay;
+		audioSource.PlayDelayed(1.5f);
+		audioSource.loop = false;
 
 	    graphicsObject = Instantiate(UIGraphics, GameObject.FindGameObjectWithTag("GameController").transform);
 	    graphicsObject.GetComponent<RectTransform>().offsetMax = Toolbox.Instance.rt.offsetMax;
@@ -87,9 +96,15 @@ public class MiniGame : StorySegment {
 
     }
 
+	public virtual void Skip(){
+		End ();
+		CompletionCallback (1);
+	}
+
     public void End()
     {
         SoundFadeMaster.FadeSound(interactionLoopAudioSource, 3, true);
         SoundFadeMaster.FadeSound(idleSpeakAudioSource, 3, true);
+		Toolbox.FindRequiredComponent<GameMaster> ().StartCoroutine (WaitForGraphicsFade ());
     }
 }

@@ -22,6 +22,10 @@ public class AudioFadeSource {
 
     public bool EvaluateFade()
     {
+		if (!audio) {
+			return true;
+		}
+
         float fraction = progress / fadeTime;
         audio.volume = startVolume * (isFadingOut ? 1f - fraction : fraction);
 

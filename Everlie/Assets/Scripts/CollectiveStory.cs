@@ -14,6 +14,8 @@ public class CollectiveStory : ScriptableObject {
 	    currentIndex = 0;
 		story [currentIndex].Play ();
 		story [currentIndex].OnSegmentCompleted += OnReceivedFade;
+
+		Screen.sleepTimeout = SleepTimeout.NeverSleep;
 	}
 
 	public void Update(){
@@ -24,17 +26,21 @@ public class CollectiveStory : ScriptableObject {
 		if (story.Count > currentIndex)
 		{
 		    Debug.Log("Complete Segment");
-		    story[currentIndex].OnSegmentCompleted -= OnReceivedFade;
+			story[currentIndex].OnSegmentCompleted -= OnReceivedFade;
 			story [currentIndex + 1].Play ();
 
 		    if (story[currentIndex + 1] as MiniGame != null)
 		    {
+				SleepMode.SetInteraction(true);
+
 		        (story[currentIndex + 1] as MiniGame).CompletionCallback += OnReceivedCompletion;
 		        (story[currentIndex + 1] as MiniGame).Reset();
 		        Debug.Log("Next segment is a Minigame");
 		    }
 		    else
 		    {
+				SleepMode.SetInteraction(false);
+
 		        story[currentIndex + 1].OnSegmentCompleted += OnReceivedFade;
 		        Debug.Log("Next segment is an AudioSequence");
 		    }
@@ -46,7 +52,10 @@ public class CollectiveStory : ScriptableObject {
     public void OnReceivedCompletion(int score)
     {
         Debug.Log("Received a Completion");
-        (story[currentIndex] as MiniGame).CompletionCallback -= OnReceivedCompletion;
+		(story[currentIndex] as MiniGame).CompletionCallback -= OnReceivedCompletion;
+
+		SleepMode.SetInteraction(false);
+
         if (story.Count > currentIndex)
         {
             if (story[currentIndex + 1] as BranchSegment != null)
@@ -59,4 +68,8 @@ public class CollectiveStory : ScriptableObject {
             currentIndex++;
         }
     }
+
+	public void SkipCurrentSegment(){
+		story [currentIndex].Skip ();
+	}
 }
