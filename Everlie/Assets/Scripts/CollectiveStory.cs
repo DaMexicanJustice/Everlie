@@ -14,6 +14,8 @@ public class CollectiveStory : ScriptableObject {
 	    currentIndex = 0;
 		story [currentIndex].Play ();
 		story [currentIndex].OnSegmentCompleted += OnReceivedFade;
+
+		Screen.sleepTimeout = SleepTimeout.NeverSleep;
 	}
 
 	public void Update(){
@@ -29,12 +31,16 @@ public class CollectiveStory : ScriptableObject {
 
 		    if (story[currentIndex + 1] as MiniGame != null)
 		    {
+				SleepMode.SetInteraction(true);
+
 		        (story[currentIndex + 1] as MiniGame).CompletionCallback += OnReceivedCompletion;
 		        (story[currentIndex + 1] as MiniGame).Reset();
 		        Debug.Log("Next segment is a Minigame");
 		    }
 		    else
 		    {
+				SleepMode.SetInteraction(false);
+
 		        story[currentIndex + 1].OnSegmentCompleted += OnReceivedFade;
 		        Debug.Log("Next segment is an AudioSequence");
 		    }
@@ -47,6 +53,8 @@ public class CollectiveStory : ScriptableObject {
     {
         Debug.Log("Received a Completion");
 		(story[currentIndex] as MiniGame).CompletionCallback -= OnReceivedCompletion;
+
+		SleepMode.SetInteraction(false);
 
         if (story.Count > currentIndex)
         {
