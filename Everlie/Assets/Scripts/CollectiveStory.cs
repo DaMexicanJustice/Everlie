@@ -24,7 +24,7 @@ public class CollectiveStory : ScriptableObject {
 		if (story.Count > currentIndex)
 		{
 		    Debug.Log("Complete Segment");
-		    story[currentIndex].OnSegmentCompleted -= OnReceivedFade;
+			story[currentIndex].OnSegmentCompleted -= OnReceivedFade;
 			story [currentIndex + 1].Play ();
 
 		    if (story[currentIndex + 1] as MiniGame != null)
@@ -46,7 +46,8 @@ public class CollectiveStory : ScriptableObject {
     public void OnReceivedCompletion(int score)
     {
         Debug.Log("Received a Completion");
-        (story[currentIndex] as MiniGame).CompletionCallback -= OnReceivedCompletion;
+		(story[currentIndex] as MiniGame).CompletionCallback -= OnReceivedCompletion;
+
         if (story.Count > currentIndex)
         {
             if (story[currentIndex + 1] as BranchSegment != null)
@@ -59,4 +60,8 @@ public class CollectiveStory : ScriptableObject {
             currentIndex++;
         }
     }
+
+	public void SkipCurrentSegment(){
+		story [currentIndex].Skip ();
+	}
 }

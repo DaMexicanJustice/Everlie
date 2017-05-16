@@ -8,7 +8,6 @@ public class GameMaster : MonoBehaviour {
 	public voidEvent OnStorySegmentEnded;
 
 	public CollectiveStory story;
-	private int index = 0;
 
     public GameObject background;
     private AudioSource myAudioSource;
@@ -37,5 +36,9 @@ public class GameMaster : MonoBehaviour {
 	    {
 	        story.Update();
 	    }
+	}
+
+	public void SkipCurrentSegment() {
+		story.SkipCurrentSegment ();
 	}
 }

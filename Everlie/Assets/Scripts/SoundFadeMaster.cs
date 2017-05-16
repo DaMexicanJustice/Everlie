@@ -9,8 +9,6 @@ public class SoundFadeMaster : Singleton<SoundFadeMaster> {
 		// Since the Constructor is protected an instance can't be made of the Toolbox
 	}
 
-    static bool applicationIsQuitting = false;
-
     private static List<AudioFadeSource> fadeSources = new List<AudioFadeSource>();
 
     public static void FadeSound(AudioSource audio, float fadeTime, bool isFadingOut)
@@ -43,10 +41,11 @@ public class SoundFadeMaster : Singleton<SoundFadeMaster> {
 
 			    foreach (AudioFadeSource str in sourcesToRemove)
 			    {
-			        if (str.audio.volume <= 0.1f)
-			        {
-			            Destroy(str.audio);
-			        }
+					if (str.audio) {
+						if (str.audio.volume <= 0.1f) {
+							Destroy (str.audio);
+						}
+					}
 
 			        fadeSources.Remove(str);
 			    }
