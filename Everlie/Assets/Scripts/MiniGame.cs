@@ -27,6 +27,8 @@ public class MiniGame : StorySegment {
     public delegate void intEvent(int completionScore);
     public intEvent CompletionCallback;
 
+	public float promptDelay = 1.5f;
+
 	public void Initialize(){
 		idleSpeakTimer = 0f;
 		hasPlayedIdleSpeak = false;
@@ -57,7 +59,7 @@ public class MiniGame : StorySegment {
 		audioSource.volume = 1f;
 		audioSource.clip = interactionSound;
 		audioSource.time = startDelay;
-		audioSource.PlayDelayed(1.5f);
+		audioSource.PlayDelayed(promptDelay);
 		audioSource.loop = false;
 
 	    graphicsObject = Instantiate(UIGraphics, GameObject.FindGameObjectWithTag("GameController").transform);
@@ -103,6 +105,7 @@ public class MiniGame : StorySegment {
 
     public void End()
     {
+		Handheld.Vibrate ();
         SoundFadeMaster.FadeSound(interactionLoopAudioSource, 3, true);
         SoundFadeMaster.FadeSound(idleSpeakAudioSource, 3, true);
 		Toolbox.FindRequiredComponent<GameMaster> ().StartCoroutine (WaitForGraphicsFade ());
