@@ -12,6 +12,10 @@ public class ParticleClicker : MonoBehaviour
 
     private ParticleSystemRenderer psr;
 
+	private List<Vector3> positions = new List<Vector3>();
+
+	public float clickOffsetRange = 20f;
+
     void Start()
     {
         ps = GetComponent<ParticleSystem>();
@@ -24,6 +28,8 @@ public class ParticleClicker : MonoBehaviour
 	    {
 	        if (Input.GetMouseButtonDown(0))
 	        {
+				positions.Clear ();
+
 	            particles = new ParticleSystem.Particle[ps.main.maxParticles];
 	            ps.GetParticles(particles);
 
@@ -32,7 +38,11 @@ public class ParticleClicker : MonoBehaviour
 
 	            for (int i = 0; i < ps.particleCount; i++)
 	            {
-	                Vector3 particlePos = Camera.main.WorldToScreenPoint(particles[i].position);
+					Vector3 particlePos = Camera.main.WorldToScreenPoint(particles[i].position);
+
+					particlePos = new Vector3 (particlePos.x, particlePos.y, Input.mousePosition.z);
+
+					positions.Add (particlePos);
 
 	                float distance = Vector3.Distance(particlePos, Input.mousePosition);
 
@@ -43,10 +53,11 @@ public class ParticleClicker : MonoBehaviour
 	                }
 	            }
 
-	            particles[target].remainingLifetime = 0f;
-	            ps.SetParticles(particles, particles.Length);
-	            Destroy(Instantiate(plingPrefab, Camera.main.transform.position, Quaternion.identity), 5f);
-
+				if (minDistance < clickOffsetRange) {
+					particles [target].remainingLifetime = 0f;
+					ps.SetParticles (particles, particles.Length);
+					Destroy (Instantiate (plingPrefab, Camera.main.transform.position, Quaternion.identity), 5f);
+				}
 	        }
 	    }
 	    else
@@ -67,4 +78,10 @@ public class ParticleClicker : MonoBehaviour
         psr = GetComponent<ParticleSystemRenderer>();
         canClickParticles = false;
     }
+
+	void OnDrawGizmos(){
+		foreach (Vector3 v in positions) {
+			Gizmos.DrawWireSphere (v, 0.1f);
+		}
+	}
 }
