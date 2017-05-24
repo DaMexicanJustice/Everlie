@@ -105,7 +105,7 @@ public class MiniGame : StorySegment {
 
     public void End()
     {
-		Handheld.Vibrate ();
+		//Handheld.Vibrate ();
         SoundFadeMaster.FadeSound(interactionLoopAudioSource, 3, true);
         SoundFadeMaster.FadeSound(idleSpeakAudioSource, 3, true);
 		Toolbox.FindRequiredComponent<GameMaster> ().StartCoroutine (WaitForGraphicsFade ());

@@ -6,7 +6,9 @@ using UnityEngine;
 public class BranchSegment : StorySegment {
 
     public AudioSequence winAudioSegment;
+	public float winTimeOut;
     public AudioSequence loseAudioSegment;
+	public float loseTimeOut;
 
     private AudioSource introAudioSource;
 
@@ -45,7 +47,7 @@ public class BranchSegment : StorySegment {
     public override void Update(){
         segmentTimer += Time.deltaTime;
 
-        if (segmentTimer >= (shouldPlayWin? winAudioSegment.segmentLength:loseAudioSegment.segmentLength)) {
+		if (segmentTimer >= (shouldPlayWin? winTimeOut:loseTimeOut) - 3) {
 			SoundFadeMaster.FadeSound(introAudioSource, 3, true);
 			OnSegmentCompleted ();
             Clear ();
