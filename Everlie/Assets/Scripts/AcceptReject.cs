@@ -24,7 +24,7 @@ public class AcceptReject : MiniGame {
 
 	private float timer;
 
-	[Range(0.3f,1f)]
+	[Range(0.1f,1f)]
 	public float delay = 0.5f;
 
     private Vector3 lastMousePos;
