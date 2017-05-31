@@ -9,8 +9,6 @@ public class MiniGame : StorySegment {
 	public AudioClip idleSpeak1;
 	public AudioClip idleSpeak2;
 
-    public AudioClip interactionSound;
-
 	public GameObject UIGraphics;
 
 	private AudioSource interactionLoopAudioSource;
@@ -26,8 +24,6 @@ public class MiniGame : StorySegment {
 
     public delegate void intEvent(int completionScore);
     public intEvent CompletionCallback;
-
-	public float promptDelay = 1.5f;
 
 	public void Initialize(){
 		idleSpeakTimer = 0f;
@@ -51,16 +47,6 @@ public class MiniGame : StorySegment {
 
 	public override void Play(){
 	    Initialize();
-
-		GameObject audioObject = new GameObject ("Interaction Sound", typeof(AudioSource));
-		Destroy (audioObject, 5f);
-
-		AudioSource audioSource = audioObject.GetComponent<AudioSource> ();
-		audioSource.volume = 1f;
-		audioSource.clip = interactionSound;
-		audioSource.time = startDelay;
-		audioSource.PlayDelayed(promptDelay);
-		audioSource.loop = false;
 
 	    graphicsObject = Instantiate(UIGraphics, GameObject.FindGameObjectWithTag("GameController").transform);
 	    graphicsObject.GetComponent<RectTransform>().offsetMax = Toolbox.Instance.rt.offsetMax;

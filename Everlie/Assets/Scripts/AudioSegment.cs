@@ -16,6 +16,9 @@ public class AudioSegment : StorySegment {
 
 	public float scaleModifier = 0.1f;
 
+	public AudioClip interactionSound;
+	public float promptDelay;
+
 	public override void Play(){
 		segmentTimer = 0f;
 
@@ -34,6 +37,18 @@ public class AudioSegment : StorySegment {
 	    graphicsObject.GetComponent<RectTransform>().offsetMax = Toolbox.Instance.rt.offsetMax;
 	    graphicsObject.GetComponent<RectTransform>().offsetMin = Toolbox.Instance.rt.offsetMin;
 	    graphicsObject.transform.localScale = Vector3.one;
+
+		GameObject audioObject = new GameObject ("Interaction Sound", typeof(AudioSource));
+		Destroy (audioObject, 5f + promptDelay);
+
+		if (interactionSound != null) {
+			AudioSource audioSource = audioObject.GetComponent<AudioSource> ();
+			audioSource.volume = 1f;
+			audioSource.clip = interactionSound;
+			audioSource.time = startDelay;
+			audioSource.PlayDelayed (promptDelay);
+			audioSource.loop = false;
+		}
 	}
 
 	public override void Update(){
